@@ -1,0 +1,16 @@
+*.o
+*.so
+*.a
+*.gc*
+~*
+*~
+\#*\#
+unit_tests
+vgcore*
+.vscode
+.idea
+*.out
+build
+*.log
+
+build
