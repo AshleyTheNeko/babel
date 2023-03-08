@@ -1,5 +1,5 @@
 [requires]
-portaudio/v190600.20161030@bincrafters/stable
+portaudio/v190700_20210406@bincrafters/stable
 sqlite3/3.28.0@bincrafters/stable
 opus/1.2.1@bincrafters/stable
 qt/5.12.5@bincrafters/stable
