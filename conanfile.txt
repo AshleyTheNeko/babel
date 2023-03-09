@@ -6,4 +6,8 @@ portaudio/19.7.0@bincrafters/stable
 qt/5.15.2
 
 [generators]
-cmake
+cmake_find_package
+cmake_paths
+
+[options]
+qt:shared=True

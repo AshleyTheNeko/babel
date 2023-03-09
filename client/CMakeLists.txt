@@ -10,8 +10,9 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}/include
 )
 
-find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
 
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(EXISTS ${CLANG_TIDY_EXE})
     set(CLANG_TIDY
         "${CLANG_TIDY_EXE}"
