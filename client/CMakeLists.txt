@@ -2,6 +2,10 @@ project(babel_client)
 
 set(SOURCES
     src/main.cpp
+    src/Widgets/Call.cpp
+    src/Widgets/Login.cpp
+    src/Widgets/Contacts.cpp
+    src/Widgets/MainWindow.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

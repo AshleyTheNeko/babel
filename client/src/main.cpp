@@ -1,16 +1,15 @@
+#include "Widgets/Login.hpp"
+#include "Widgets/MainWindow.hpp"
 #include <QApplication>
+#include <QMainWindow>
 #include <iostream>
-
-
-
-#include <QPushButton>
 
 int main(int argc, char const *argv[])
 {
     QApplication app(argc, (char **) argv);
+    babel::MainWindow window;
 
-    QPushButton button("haiiiiiiii wrld!!");
-    button.show();
+    window.show();
 
     return app.exec();
 }

@@ -22,6 +22,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # For common folder
 include_directories("common/include")
 
+# For debug owo
+add_compile_options(-g)
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 # Build programs
 add_subdirectory(server)
 add_subdirectory(client)
