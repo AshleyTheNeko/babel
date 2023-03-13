@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QPointer>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
@@ -25,17 +26,17 @@ namespace babel
             QWidget &get_central_widget();
 
         private:
-            QWidget *centralwidget = nullptr;
-            QVBoxLayout *verticalLayout = nullptr;
-            QSpacerItem *horizontalSpacer = nullptr;
-            QLabel *label_2 = nullptr;
-            QLineEdit *lineEdit = nullptr;
-            QLabel *label = nullptr;
-            QLineEdit *lineEdit_2 = nullptr;
-            QSpacerItem *horizontalSpacer_3 = nullptr;
-            QPushButton *pushButton = nullptr;
-            QPushButton *pushButton_2 = nullptr;
-            QSpacerItem *horizontalSpacer_4 = nullptr;
+            QPointer<QWidget> central_widget;
+            QPointer<QVBoxLayout> login_box;
+            QPointer<QLabel> username_label;
+            QPointer<QLineEdit> username_field;
+            QPointer<QLabel> password_label;
+            QPointer<QLineEdit> password_field;
+            QPointer<QPushButton> login_button;
+            QPointer<QPushButton> register_button;
+            QSpacerItem *spacer_1;
+            QSpacerItem *spacer_2;
+            QSpacerItem *spacer_3;
 
             void setup_ui();
     };

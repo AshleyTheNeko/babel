@@ -50,12 +50,12 @@ namespace babel
             void clear_contacts(void);
 
         private:
-            QPointer<QWidget> centralwidget;
-            QHBoxLayout *horizontalLayout_10;
-            QScrollArea *scrollArea;
-            QWidget *scrollAreaWidgetContents;
-            QVBoxLayout *verticalLayout;
-            std::vector<std::shared_ptr<babel::ContactButton>> contacts;
+            QPointer<QWidget> central_widget;
+            QPointer<QHBoxLayout> main_layout;
+            QPointer<QScrollArea> contact_scroll_area;
+            QPointer<QWidget> contacts_holder;
+            QPointer<QVBoxLayout> contacts_layout;
+            std::vector<std::unique_ptr<babel::ContactButton>> contacts;
 
             void setup_ui();
     };

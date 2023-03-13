@@ -20,13 +20,12 @@ namespace babel
 
         signals:
         public slots:
-            void loginButton();
-            void callButton(std::string caller, int id);
-            void hangupButton();
-            void updateClock();
+            void login_click();
+            void call_click(std::string caller, int id);
+            void hangup_click();
 
         private:
-            void initCallbacks();
+            void init_callbacks();
 
         private:
             QTimer time;

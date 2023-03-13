@@ -4,27 +4,33 @@ babel::ContactsPage::ContactsPage() { setup_ui(); }
 
 void babel::ContactsPage::setup_ui()
 {
-    centralwidget = new QWidget();
-    centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-    horizontalLayout_10 = new QHBoxLayout(centralwidget);
-    horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
-    scrollArea = new QScrollArea(centralwidget);
-    scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
-    scrollArea->setWidgetResizable(true);
-    scrollAreaWidgetContents = new QWidget();
-    scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-    scrollAreaWidgetContents->setGeometry(QRect(0, 0, 624, 497));
-    verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
-    verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-    scrollArea->setWidget(scrollAreaWidgetContents);
-    horizontalLayout_10->addWidget(scrollArea);
+    central_widget = new QWidget();
+    central_widget->setObjectName(QString::fromUtf8("central_widget"));
+
+    main_layout = new QHBoxLayout(central_widget);
+    main_layout->setObjectName(QString::fromUtf8("main_layout"));
+
+    contact_scroll_area = new QScrollArea(central_widget);
+    contact_scroll_area->setObjectName(QString::fromUtf8("contact_scroll_area"));
+    contact_scroll_area->setWidgetResizable(true);
+
+    contacts_holder = new QWidget();
+    contacts_holder->setObjectName(QString::fromUtf8("contacts_holder"));
+    contacts_holder->setGeometry(QRect(0, 0, 624, 497));
+
+    contacts_layout = new QVBoxLayout(contacts_holder);
+    contacts_layout->setObjectName(QString::fromUtf8("contacts_layout"));
+
+    contact_scroll_area->setWidget(contacts_holder);
+
+    main_layout->addWidget(contact_scroll_area);
 }
 
-QWidget &babel::ContactsPage::get_central_widget() { return (*centralwidget); }
+QWidget &babel::ContactsPage::get_central_widget() { return (*central_widget); }
 
 QPushButton &babel::ContactsPage::add_contact(std::string name, int id)
 {
-    contacts.push_back(std::make_shared<babel::ContactButton>(id, name, scrollAreaWidgetContents, verticalLayout));
+    contacts.push_back(std::make_unique<babel::ContactButton>(id, name, contacts_holder, contacts_layout));
     return (contacts.back()->get_button());
 }
 void babel::ContactsPage::clear_contacts(void) {}

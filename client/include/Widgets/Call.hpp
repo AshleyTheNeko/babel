@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QElapsedTimer>
+#include <QPointer>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
@@ -31,16 +32,16 @@ namespace babel
 
         private:
             QElapsedTimer timer;
-            QWidget *centralwidget;
-            QVBoxLayout *verticalLayout;
-            QFrame *frame;
-            QVBoxLayout *verticalLayout_2;
-            QLabel *label;
-            QLabel *label_2;
-            QFrame *frame_2;
-            QHBoxLayout *horizontalLayout;
-            QPushButton *pushButton_2;
-            QPushButton *pushButton;
+            QPointer<QWidget> central_widget;
+            QPointer<QVBoxLayout> main_layout;
+            QPointer<QFrame> call_info_frame;
+            QPointer<QVBoxLayout> call_info_layout;
+            QPointer<QLabel> call_name;
+            QPointer<QLabel> call_time;
+            QPointer<QFrame> call_buttons_frame;
+            QPointer<QHBoxLayout> call_buttons_layout;
+            QPointer<QPushButton> mic_button;
+            QPointer<QPushButton> hangup_button;
 
             void setup_ui(void);
     };

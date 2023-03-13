@@ -4,69 +4,63 @@ babel::LoginPage::LoginPage() { setup_ui(); }
 
 void babel::LoginPage::setup_ui()
 {
-    centralwidget = new QWidget();
-    centralwidget->setEnabled(true);
-    centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-    verticalLayout = new QVBoxLayout(centralwidget);
-    verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-    verticalLayout->setContentsMargins(100, 150, 100, 150);
-    horizontalSpacer = new QSpacerItem(625, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    central_widget = new QWidget();
+    central_widget->setEnabled(true);
+    central_widget->setObjectName(QString::fromUtf8("central_widget"));
+    login_box = new QVBoxLayout(central_widget);
+    login_box->setObjectName(QString::fromUtf8("login_box"));
+    login_box->setContentsMargins(100, 150, 100, 150);
+    spacer_1 = new QSpacerItem(625, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    verticalLayout->addItem(horizontalSpacer);
+    login_box->addItem(spacer_1);
 
-    label_2 = new QLabel(centralwidget);
-    label_2->setObjectName(QString::fromUtf8("label_2"));
-    label_2->setAlignment(Qt::AlignCenter);
+    username_label = new QLabel(central_widget);
+    username_label->setObjectName(QString::fromUtf8("username_label"));
+    username_label->setAlignment(Qt::AlignCenter);
 
-    verticalLayout->addWidget(label_2);
+    login_box->addWidget(username_label);
 
-    lineEdit = new QLineEdit(centralwidget);
-    lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+    username_field = new QLineEdit(central_widget);
+    username_field->setObjectName(QString::fromUtf8("username_field"));
 
-    verticalLayout->addWidget(lineEdit);
+    login_box->addWidget(username_field);
 
-    label = new QLabel(centralwidget);
-    label->setObjectName(QString::fromUtf8("label"));
-    label->setAlignment(Qt::AlignCenter);
+    password_label = new QLabel(central_widget);
+    password_label->setObjectName(QString::fromUtf8("password_label"));
+    password_label->setAlignment(Qt::AlignCenter);
 
-    verticalLayout->addWidget(label);
+    login_box->addWidget(password_label);
 
-    lineEdit_2 = new QLineEdit(centralwidget);
-    lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
-    lineEdit_2->setEchoMode(QLineEdit::Password);
+    password_field = new QLineEdit(central_widget);
+    password_field->setObjectName(QString::fromUtf8("password_field"));
+    password_field->setEchoMode(QLineEdit::Password);
 
-    verticalLayout->addWidget(lineEdit_2);
+    login_box->addWidget(password_field);
 
-    horizontalSpacer_3 = new QSpacerItem(437, 28, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    spacer_2 = new QSpacerItem(437, 28, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    verticalLayout->addItem(horizontalSpacer_3);
+    login_box->addItem(spacer_2);
 
-    pushButton = new QPushButton(centralwidget);
-    pushButton->setObjectName(QString::fromUtf8("pushButton"));
+    login_button = new QPushButton(central_widget);
+    login_button->setObjectName(QString::fromUtf8("login_button"));
 
-    verticalLayout->addWidget(pushButton);
+    login_box->addWidget(login_button);
 
-    pushButton_2 = new QPushButton(centralwidget);
-    pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+    register_button = new QPushButton(central_widget);
+    register_button->setObjectName(QString::fromUtf8("register_button"));
 
-    verticalLayout->addWidget(pushButton_2);
+    login_box->addWidget(register_button);
 
-    horizontalSpacer_4 = new QSpacerItem(437, 10, QSizePolicy::Fixed, QSizePolicy::Minimum);
+    spacer_3 = new QSpacerItem(437, 10, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
-    verticalLayout->addItem(horizontalSpacer_4);
+    login_box->addItem(spacer_3);
 
-    label_2->setText(QCoreApplication::translate("MainWindow", "Username", nullptr));
-    label->setText(QCoreApplication::translate("MainWindow", "Password", nullptr));
-    pushButton->setText(QCoreApplication::translate("MainWindow", "Login", nullptr));
-    pushButton_2->setText(QCoreApplication::translate("MainWindow", "Register", nullptr));
+    username_label->setText(QString("Username"));
+    password_label->setText(QString("Password"));
+    login_button->setText(QString("Login"));
+    register_button->setText(QString("Register"));
 }
 
-QPushButton &babel::LoginPage::get_login_button(void)
-{
-    return (*pushButton);
-}
+QPushButton &babel::LoginPage::get_login_button(void) { return (*login_button); }
 
-QWidget &babel::LoginPage::get_central_widget(void)
-{
-    return (*centralwidget);
-}
+QWidget &babel::LoginPage::get_central_widget(void) { return (*central_widget); }

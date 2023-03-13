@@ -6,61 +6,64 @@ babel::CallPage::CallPage() { setup_ui(); }
 
 void babel::CallPage::setup_ui(void)
 {
-    centralwidget = new QWidget();
-    centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-    verticalLayout = new QVBoxLayout(centralwidget);
-    verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-    frame = new QFrame(centralwidget);
-    frame->setObjectName(QString::fromUtf8("frame"));
-    frame->setFrameShape(QFrame::StyledPanel);
-    frame->setFrameShadow(QFrame::Raised);
-    verticalLayout_2 = new QVBoxLayout(frame);
-    verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-    label = new QLabel(frame);
-    label->setObjectName(QString::fromUtf8("label"));
-    QFont font;
-    font.setPointSize(25);
-    label->setFont(font);
-    label->setAlignment(Qt::AlignCenter);
+    central_widget = new QWidget();
+    central_widget->setObjectName(QString::fromUtf8("central_widget"));
 
-    verticalLayout_2->addWidget(label);
+    main_layout = new QVBoxLayout(central_widget);
+    main_layout->setObjectName(QString::fromUtf8("main_layout"));
 
-    label_2 = new QLabel(frame);
-    label_2->setObjectName(QString::fromUtf8("label_2"));
-    QFont font1;
-    font1.setPointSize(20);
-    label_2->setFont(font1);
-    label_2->setScaledContents(false);
-    label_2->setAlignment(Qt::AlignCenter);
-    label_2->setIndent(0);
+    call_info_frame = new QFrame(central_widget);
+    call_info_frame->setObjectName(QString::fromUtf8("call_info_frame"));
+    call_info_frame->setFrameShape(QFrame::StyledPanel);
+    call_info_frame->setFrameShadow(QFrame::Raised);
+    call_info_layout = new QVBoxLayout(call_info_frame);
+    call_info_layout->setObjectName(QString::fromUtf8("call_info_layout"));
 
-    verticalLayout_2->addWidget(label_2);
+    call_name = new QLabel(call_info_frame);
+    call_name->setObjectName(QString::fromUtf8("call_name"));
+    QFont font_name;
+    font_name.setPointSize(25);
+    call_name->setFont(font_name);
+    call_name->setAlignment(Qt::AlignCenter);
 
-    verticalLayout->addWidget(frame);
+    call_info_layout->addWidget(call_name);
 
-    frame_2 = new QFrame(centralwidget);
-    frame_2->setObjectName(QString::fromUtf8("frame_2"));
-    frame_2->setFrameShape(QFrame::StyledPanel);
-    frame_2->setFrameShadow(QFrame::Raised);
-    horizontalLayout = new QHBoxLayout(frame_2);
-    horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-    pushButton_2 = new QPushButton(frame_2);
-    pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-    QFont font2;
-    font2.setPointSize(10);
-    pushButton_2->setFont(font2);
+    call_time = new QLabel(call_info_frame);
+    call_time->setObjectName(QString::fromUtf8("call_time"));
+    QFont font_time;
+    font_time.setPointSize(20);
+    call_time->setFont(font_time);
+    call_time->setScaledContents(false);
+    call_time->setAlignment(Qt::AlignCenter);
+    call_time->setIndent(0);
 
-    horizontalLayout->addWidget(pushButton_2);
+    call_info_layout->addWidget(call_time);
 
-    pushButton = new QPushButton(frame_2);
-    pushButton->setObjectName(QString::fromUtf8("pushButton"));
+    main_layout->addWidget(call_info_frame);
 
-    horizontalLayout->addWidget(pushButton);
+    call_buttons_frame = new QFrame(central_widget);
+    call_buttons_frame->setObjectName(QString::fromUtf8("call_buttons_frame"));
+    call_buttons_frame->setFrameShape(QFrame::StyledPanel);
+    call_buttons_frame->setFrameShadow(QFrame::Raised);
+    call_buttons_layout = new QHBoxLayout(call_buttons_frame);
+    call_buttons_layout->setObjectName(QString::fromUtf8("call_buttons_layout"));
+    mic_button = new QPushButton(call_buttons_frame);
+    mic_button->setObjectName(QString::fromUtf8("mic_button"));
+    QFont font_button;
+    font_button.setPointSize(10);
+    mic_button->setFont(font_button);
 
-    verticalLayout->addWidget(frame_2);
+    call_buttons_layout->addWidget(mic_button);
 
-    pushButton_2->setText(QString("Mute"));
-    pushButton->setText(QString("Hang up"));
+    hangup_button = new QPushButton(call_buttons_frame);
+    hangup_button->setObjectName(QString::fromUtf8("hangup_button"));
+
+    call_buttons_layout->addWidget(hangup_button);
+
+    main_layout->addWidget(call_buttons_frame);
+
+    mic_button->setText(QString("Mute"));
+    hangup_button->setText(QString("Hang up"));
 }
 
 void babel::CallPage::change_text(void)
@@ -69,7 +72,7 @@ void babel::CallPage::change_text(void)
 
     str_time << "Call time: " << std::setfill('0') << std::setw(2) << timer.elapsed() / 60000 << ":" << std::setfill('0') << std::setw(2)
              << (timer.elapsed() % 60000) / 1000;
-    label_2->setText(QString(str_time.str().c_str()));
+    call_time->setText(QString(str_time.str().c_str()));
 }
 
 void babel::CallPage::setup_informations(std::string name, int start_time)
@@ -79,14 +82,13 @@ void babel::CallPage::setup_informations(std::string name, int start_time)
 
     timer.restart();
     str_name << "Call with " << name;
-    label->setText(QString(str_name.str().c_str()));
-    str_time << "Call time: " << std::setfill('0') << std::setw(2) << timer.elapsed() / 60000 << ":" << std::setfill('0') << std::setw(2)
-             << (timer.elapsed() % 60000) / 1000;
-    label_2->setText(QString(str_time.str().c_str()));
+    call_name->setText(QString(str_name.str().c_str()));
+    str_time << "Call time: 00:00";
+    call_time->setText(QString(str_time.str().c_str()));
 }
 
-QWidget &babel::CallPage::get_central_widget() { return (*centralwidget); }
+QWidget &babel::CallPage::get_central_widget() { return (*central_widget); }
 
-QPushButton &babel::CallPage::get_hangup() { return (*pushButton); }
+QPushButton &babel::CallPage::get_hangup() { return (*hangup_button); }
 
-QPushButton &babel::CallPage::get_mute() { return (*pushButton_2); }
+QPushButton &babel::CallPage::get_mute() { return (*mic_button); }

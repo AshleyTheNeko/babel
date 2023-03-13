@@ -7,7 +7,7 @@ babel::MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), log_page()
     if (objectName().isEmpty())
         setObjectName(QString::fromUtf8("MainWindow"));
     setFixedSize(640, 564);
-    initCallbacks();
+    init_callbacks();
     setWindowTitle(QCoreApplication::translate("MainWindow", "Babel", nullptr));
     list = new QStackedWidget(this);
     setCentralWidget(list);
@@ -19,15 +19,15 @@ babel::MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), log_page()
     time.start();
 }
 
-void babel::MainWindow::hangupButton(void) { list->setCurrentWidget(&contact_page.get_central_widget()); }
+void babel::MainWindow::hangup_click(void) { list->setCurrentWidget(&contact_page.get_central_widget()); }
 
-void babel::MainWindow::callButton(std::string caller, int id)
+void babel::MainWindow::call_click(std::string caller, int id)
 {
     call_page.setup_informations(caller, id);
     list->setCurrentWidget(&call_page.get_central_widget());
 }
 
-void babel::MainWindow::loginButton()
+void babel::MainWindow::login_click()
 {
     std::string fortnite[] = {
         "amogus",
@@ -46,14 +46,14 @@ void babel::MainWindow::loginButton()
     };
     for (int i = 0; i < 12; i++) {
         connect(&contact_page.add_contact(fortnite[i], i), &QPushButton::clicked, this,
-            [this, i, fortnite] { babel::MainWindow::callButton(fortnite[i], i); });
+            [this, i, fortnite] { babel::MainWindow::call_click(fortnite[i], i); });
     }
     list->setCurrentWidget(&contact_page.get_central_widget());
 }
 
-void babel::MainWindow::initCallbacks()
+void babel::MainWindow::init_callbacks()
 {
-    connect(&call_page.get_hangup(), &QPushButton::clicked, this, &babel::MainWindow::hangupButton);
-    connect(&log_page.get_login_button(), &QPushButton::clicked, this, &babel::MainWindow::loginButton);
+    connect(&call_page.get_hangup(), &QPushButton::clicked, this, &babel::MainWindow::hangup_click);
+    connect(&log_page.get_login_button(), &QPushButton::clicked, this, &babel::MainWindow::login_click);
     connect(&time, &QTimer::timeout, this, [this] { this->call_page.change_text(); });
 }
