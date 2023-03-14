@@ -4,12 +4,17 @@
 #include <QMainWindow>
 #include <iostream>
 
-int main(int argc, char const *argv[])
+int main(int argc, char **argv)
 {
-    QApplication app(argc, (char **) argv);
-    babel::MainWindow window;
+    try {
+        QApplication app(argc, argv);
+        babel::MainWindow window(nullptr);
 
-    window.show();
+        window.show();
 
-    return app.exec();
+        return app.exec();
+    } catch (std::exception &e) {
+        std::cerr << "Error during start: " << e.what() << std::endl;
+    }
+    return (1);
 }

@@ -24,7 +24,7 @@ namespace babel
             ~CallPage() = default;
 
             QWidget &get_central_widget();
-            void setup_informations(std::string name, int start_time);
+            void setup_informations(std::string const &name, int start_time);
             QPushButton &get_hangup();
             QPushButton &get_mute();
 

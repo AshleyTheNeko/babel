@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(babel VERSION 0.1.0)
-set (CMAKE_CXX_STANDARD 17)
 
 # Conan setup
 if(EXISTS ${CMAKE_BINARY_DIR}/conan_paths.cmake)
@@ -11,9 +10,9 @@ endif()
 
 # Get packages
 find_package(portaudio)
-find_package(opus)
-find_package(asio)
-find_package(sqlite3)
+find_package(Opus)
+find_package(asio REQUIRED)
+find_package(SQLite3 REQUIRED)
 find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 # For VSCode compatibility :3
@@ -26,6 +25,17 @@ include_directories("common/include")
 add_compile_options(-g)
 add_compile_options(-fsanitize=address)
 add_link_options(-fsanitize=address)
+
+# Tidy
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+
+if(EXISTS ${CLANG_TIDY_EXE})
+	set(CLANG_TIDY
+		"${CLANG_TIDY_EXE}"
+		"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy")
+		# "-header-filter=^.*(?:third-party).*gm")
+	set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
+endif()
 
 # Build programs
 add_subdirectory(server)

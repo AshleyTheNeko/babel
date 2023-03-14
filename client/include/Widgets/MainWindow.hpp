@@ -18,16 +18,16 @@ namespace babel
             MainWindow &operator=(const MainWindow &) = delete;
             ~MainWindow() = default;
 
-        signals:
         public slots:
             void login_click();
-            void call_click(std::string caller, int id);
+            void call_click(const std::string &caller, int id);
             void hangup_click();
 
         private:
+            static constexpr std::tuple<int, int> WIN_SIZE = {640, 564};
+
             void init_callbacks();
 
-        private:
             QTimer time;
             QPointer<QStackedWidget> list;
             babel::LoginPage log_page;

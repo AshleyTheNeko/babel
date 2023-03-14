@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QPointer>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
@@ -10,13 +11,12 @@
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include <QPointer>
 
 namespace babel
 {
     class ContactButton {
         public:
-            ContactButton(int id, std::string name, QWidget *parent, QVBoxLayout *main_layout);
+            ContactButton(int id, std::string const &name, QWidget *parent, QVBoxLayout *main_layout);
             ContactButton(ContactButton &&) = delete;
             ContactButton(const ContactButton &) = delete;
             ContactButton &operator=(ContactButton &&) = delete;
@@ -46,7 +46,7 @@ namespace babel
             ~ContactsPage() = default;
 
             QWidget &get_central_widget();
-            QPushButton &add_contact(std::string name, int id);
+            QPushButton &add_contact(std::string const &name, int id);
             void clear_contacts(void);
 
         private:

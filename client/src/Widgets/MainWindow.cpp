@@ -1,12 +1,15 @@
 #include "Widgets/MainWindow.hpp"
+#include "const_expressions.h"
 #include <QMessageBox>
+#include <array>
 #include <iostream>
 
-babel::MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), log_page(), contact_page(), call_page()
+babel::MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-    if (objectName().isEmpty())
+    if (objectName().isEmpty()) {
         setObjectName(QString::fromUtf8("MainWindow"));
-    setFixedSize(640, 564);
+    }
+    setFixedSize(std::get<0>(WIN_SIZE), std::get<1>(WIN_SIZE));
     init_callbacks();
     setWindowTitle(QCoreApplication::translate("MainWindow", "Babel", nullptr));
     list = new QStackedWidget(this);
@@ -15,13 +18,13 @@ babel::MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), log_page()
     list->addWidget(&contact_page.get_central_widget());
     list->addWidget(&call_page.get_central_widget());
     list->setCurrentIndex(0);
-    time.setInterval(1000);
+    time.setInterval(SECOND);
     time.start();
 }
 
-void babel::MainWindow::hangup_click(void) { list->setCurrentWidget(&contact_page.get_central_widget()); }
+void babel::MainWindow::hangup_click() { list->setCurrentWidget(&contact_page.get_central_widget()); }
 
-void babel::MainWindow::call_click(std::string caller, int id)
+void babel::MainWindow::call_click(const std::string &caller, int id)
 {
     call_page.setup_informations(caller, id);
     list->setCurrentWidget(&call_page.get_central_widget());
@@ -29,7 +32,7 @@ void babel::MainWindow::call_click(std::string caller, int id)
 
 void babel::MainWindow::login_click()
 {
-    std::string fortnite[] = {
+    std::array<std::string, 13> fortnite = {
         "amogus",
         "assert_perror",
         "drand48_datax",
@@ -44,9 +47,9 @@ void babel::MainWindow::login_click()
         "XATTR_LIST_MAX",
         "ccc",
     };
-    for (int i = 0; i < 12; i++) {
-        connect(&contact_page.add_contact(fortnite[i], i), &QPushButton::clicked, this,
-            [this, i, fortnite] { babel::MainWindow::call_click(fortnite[i], i); });
+    for (int i = 0; i < fortnite.size(); i++) {
+        connect(&contact_page.add_contact(fortnite.at(i), i), &QPushButton::clicked, this,
+            [this, i, fortnite] { babel::MainWindow::call_click(fortnite.at(i), i); });
     }
     list->setCurrentWidget(&contact_page.get_central_widget());
 }
