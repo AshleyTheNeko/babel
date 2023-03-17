@@ -55,7 +55,7 @@ namespace babel
             QPointer<QScrollArea> contact_scroll_area;
             QPointer<QWidget> contacts_holder;
             QPointer<QVBoxLayout> contacts_layout;
-            std::vector<std::unique_ptr<babel::ContactButton>> contacts;
+            std::vector<std::unique_ptr<ContactButton>> contacts;
 
             void setup_ui();
     };

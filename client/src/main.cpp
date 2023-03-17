@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     try {
         QApplication app(argc, argv);
         babel::MainWindow window(nullptr);
-
+        
         window.show();
 
         return app.exec();

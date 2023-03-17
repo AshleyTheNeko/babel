@@ -32,10 +32,15 @@ find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(EXISTS ${CLANG_TIDY_EXE})
 	set(CLANG_TIDY
 		"${CLANG_TIDY_EXE}"
-		"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy")
-		# "-header-filter=^.*(?:third-party).*gm")
+		"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy"
+		"-header-filter=^.*(?:third-party).*gm")
 	set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
 endif()
+
+set(COMMON_SOURCES
+	${CMAKE_SOURCE_DIR}/common/src/Packet.cpp
+	${CMAKE_SOURCE_DIR}/common/src/Error.cpp
+)
 
 # Build programs
 add_subdirectory(server)

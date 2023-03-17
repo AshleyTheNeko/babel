@@ -3,10 +3,23 @@
 
 constexpr int PORT_NBR = 2000;
 
-babel::Server::Server() : endpoint(asio::ip::tcp::v4(), PORT_NBR), acceptor(service, endpoint)
+babel::Server::Server(Database &db) : endpoint(asio::ip::tcp::v4(), PORT_NBR), acceptor(service, endpoint), db(db) { accept(); }
+
+void babel::Server::accept()
 {
-    using socket_ptr = std::shared_ptr<asio::ip::tcp::socket>;
-    socket_ptr socket = std::make_shared<asio::ip::tcp::socket>(service);
-    acceptor.async_accept(*socket,
-        [socket](__attribute_maybe_unused__ std::error_code error) { std::cout << "New connection from " << socket->remote_endpoint().address() << std::endl; });
+    std::shared_ptr<Client> cli = std::make_shared<Client>(service, clients, db);
+
+    acceptor.async_accept(cli->get_socket(), std::bind(&babel::Server::handle_accept, this, cli));
+}
+
+void babel::Server::handle_accept(const std::shared_ptr<Client> &client)
+{
+    client->start();
+    accept();
+}
+
+void babel::Server::run()
+{
+    service.run();
+    accept();
 }
