@@ -26,10 +26,11 @@ namespace babel
             void register_click();
             void register_done();
             void fetch_contacts();
+            void contacts_fetched();
             void check_calls();
+            void calls_checked();
             void call_click(const std::string &caller, int id);
             void hangup_click();
-            void net_response();
 
         private:
             static constexpr std::tuple<int, int> WIN_SIZE = {640, 564};
@@ -38,8 +39,12 @@ namespace babel
 
             QPointer<babel::NetThread> network_thread = nullptr;
             QPointer<QTcpSocket> sock;
-            QByteArray byte_arr;
+            QByteArray reg_log_bytes;
+            QByteArray contacts_bytes;
+            QByteArray calls_bytes;
             QTimer time;
+            QTimer contact_fetch_timer;
+            QTimer call_fetch_timer;
             QPointer<QStackedWidget> list;
             babel::LoginPage log_page;
             babel::ContactsPage contact_page;

@@ -23,8 +23,10 @@ namespace babel
             ~LoginPage() = default;
 
             QPushButton &get_login_button();
+            QPushButton &get_register_button();
             QWidget &get_central_widget();
-
+            std::string get_username();
+            std::string get_password();
         private:
             QPointer<QWidget> central_widget;
             QPointer<QVBoxLayout> login_box;

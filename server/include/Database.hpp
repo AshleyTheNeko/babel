@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <map>
+#include <string>
 #include <sqlite3.h>
 
 namespace babel

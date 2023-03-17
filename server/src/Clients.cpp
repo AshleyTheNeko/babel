@@ -2,7 +2,7 @@
 #include <iostream>
 
 babel::Client::Client(asio::io_service &service, std::vector<std::shared_ptr<Client>> &clients, Database &db)
-    : clients(clients), sock(service), db(db)
+    : clients(clients), sock(service), db(db), user_id(0)
 {
 }
 
@@ -21,7 +21,8 @@ void babel::Client::recieve_header()
         [this](const asio::error_code &error, std::size_t bytes_transferred) { recieve_body(error, bytes_transferred); });
 }
 
-void babel::Client::recieve_body(const asio::error_code &error, std::size_t bytes_transferred)
+void babel::Client::recieve_body(
+    __attribute_maybe_unused__ const asio::error_code &error, __attribute_maybe_unused__ std::size_t bytes_transferred)
 {
     try {
         last_packet.set_body_size_from_header();
@@ -34,11 +35,11 @@ void babel::Client::recieve_body(const asio::error_code &error, std::size_t byte
         [this](const asio::error_code &error, std::size_t bytes_transferred) { parse_body(error, bytes_transferred); });
 }
 
-static std::tuple<std::string, std::string> &&get_parameters(std::string &&response)
+static std::tuple<std::string, std::string> get_parameters(std::string &&response)
 {
     std::string user;
     std::string pass;
-    int pos = 0;
+    size_t pos = 0;
 
     if ((pos = response.find(';')) != std::string::npos) {
         user = response.substr(0, pos);
@@ -52,7 +53,8 @@ static std::tuple<std::string, std::string> &&get_parameters(std::string &&respo
     return {user, pass};
 }
 
-void babel::Client::parse_body(const asio::error_code &error, std::size_t bytes_transferred)
+void babel::Client::parse_body(
+    __attribute_maybe_unused__ const asio::error_code &error, __attribute_maybe_unused__ std::size_t bytes_transferred)
 {
     for (int i = 0; i < last_packet.get_size(); i++) {
         if (last_packet.get_body()[i] == '\r' || last_packet.get_body()[i] == '\n') {
@@ -66,7 +68,7 @@ void babel::Client::parse_body(const asio::error_code &error, std::size_t bytes_
             case LOGIN:
                 login(get_parameters(last_packet.get_body()));
                 break;
-            case LOGOUT:
+            case REGISTER:
                 register_user(get_parameters(last_packet.get_body()));
                 break;
             case CALL:

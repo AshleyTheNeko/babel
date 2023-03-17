@@ -14,5 +14,5 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC ${SQLite3_INCLUDE_DIRS}
 )
 
-target_link_libraries(${PROJECT_NAME} SQLite3)
+target_link_libraries(${PROJECT_NAME} SQLite::SQLite)
 target_link_libraries(${PROJECT_NAME} asio::asio)

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 
-babel::Database::Database()
+babel::Database::Database(): db(nullptr)
 {
     std::ifstream file("./");
     int ret_value = sqlite3_open("./", &db);
@@ -16,10 +16,10 @@ babel::Database::Database()
 
 std::vector<std::map<std::string, std::string>> babel::Database::run_query(std::string &&request)
 {
-    sqlite3_stmt *stmt;
+    sqlite3_stmt *stmt = nullptr;
     std::vector<std::map<std::string, std::string>> ret;
 
-    int rc = sqlite3_prepare_v2(db, request.c_str(), -1, &stmt, NULL);
+    int rc = sqlite3_prepare_v2(db, request.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK) {
         throw babel::Error(sqlite3_errmsg(db));
     }

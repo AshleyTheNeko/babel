@@ -33,7 +33,7 @@ QPushButton &babel::ContactsPage::add_contact(std::string const &name, int id)
     contacts.push_back(std::make_unique<babel::ContactButton>(id, name, contacts_holder, contacts_layout));
     return (contacts.back()->get_button());
 }
-void babel::ContactsPage::clear_contacts() {}
+void babel::ContactsPage::clear_contacts() { contacts.clear(); }
 
 babel::ContactButton::ContactButton(int id, std::string const &name, QWidget *parent, QVBoxLayout *main_layout)
     : name(name), id(id), frame(new QFrame(parent)), layout(new QHBoxLayout(frame)), label(new QLabel(frame)),

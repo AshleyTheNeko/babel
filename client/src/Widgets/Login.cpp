@@ -59,4 +59,10 @@ void babel::LoginPage::setup_ui()
 
 QPushButton &babel::LoginPage::get_login_button() { return (*login_button); }
 
+QPushButton &babel::LoginPage::get_register_button() { return (*register_button); }
+
 QWidget &babel::LoginPage::get_central_widget() { return (*central_widget); }
+
+std::string babel::LoginPage::get_username() { return (username_field->text().toStdString()); }
+
+std::string babel::LoginPage::get_password() { return (password_field->text().toStdString()); }

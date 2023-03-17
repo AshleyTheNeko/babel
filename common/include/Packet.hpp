@@ -12,6 +12,7 @@ namespace babel
         CALL,
         ACCEPT_CALL,
         GET_USERS,
+        REGISTER,
         MAX_REQUEST,
     };
 
