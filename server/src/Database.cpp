@@ -5,8 +5,8 @@
 
 babel::Database::Database(): db(nullptr)
 {
-    std::ifstream file("./");
-    int ret_value = sqlite3_open("./", &db);
+    std::ifstream file(static_cast<char const *>(PATH));
+    int ret_value = sqlite3_open(static_cast<char const *>(PATH), &db);
 
     if (!file.good()) {
         run_query("CREATE TABLE `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "

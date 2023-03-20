@@ -3,7 +3,7 @@
 babel::LoginPage::LoginPage()
     : central_widget(new QWidget()), login_box(new QVBoxLayout(central_widget)),
       spacer_1(new QSpacerItem(625, 10, QSizePolicy::Expanding, QSizePolicy::Minimum)), username_label(new QLabel(central_widget)),
-      username_field(new QLineEdit(central_widget)), password_label(new QLabel(central_widget)),
+      username_field(new QLineEdit(central_widget)), password_label(new QLabel(central_widget)), error_label(new QLabel(central_widget)),
       password_field(new QLineEdit(central_widget)), spacer_2(new QSpacerItem(437, 28, QSizePolicy::Expanding, QSizePolicy::Minimum)),
       login_button(new QPushButton(central_widget)), register_button(new QPushButton(central_widget)),
       spacer_3(new QSpacerItem(437, 10, QSizePolicy::Fixed, QSizePolicy::Minimum))
@@ -17,6 +17,10 @@ void babel::LoginPage::setup_ui()
     central_widget->setObjectName(QString::fromUtf8("central_widget"));
     login_box->setObjectName(QString::fromUtf8("login_box"));
     login_box->setContentsMargins(100, 150, 100, 150);
+
+    error_label->setObjectName(QString::fromUtf8("error_label"));
+    error_label->setAlignment(Qt::AlignCenter);
+    login_box->addWidget(error_label);
 
     login_box->addItem(spacer_1);
 
@@ -56,6 +60,8 @@ void babel::LoginPage::setup_ui()
     login_button->setText(QString("Login"));
     register_button->setText(QString("Register"));
 }
+
+void babel::LoginPage::set_error(std::string &&err) { error_label->setText(QString(err.c_str())); }
 
 QPushButton &babel::LoginPage::get_login_button() { return (*login_button); }
 

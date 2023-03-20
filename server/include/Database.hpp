@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vector>
 #include <map>
-#include <string>
 #include <sqlite3.h>
+#include <string>
+#include <vector>
 
 namespace babel
 {
+    constexpr const char PATH[] = "./miaou";
     class Database {
         public:
             Database();

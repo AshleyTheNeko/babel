@@ -1,9 +1,7 @@
 #include "Server.hpp"
 #include <iostream>
 
-constexpr int PORT_NBR = 2000;
-
-babel::Server::Server(Database &db) : endpoint(asio::ip::tcp::v4(), PORT_NBR), acceptor(service, endpoint), db(db) { accept(); }
+babel::Server::Server(Database &db) : endpoint(asio::ip::tcp::v4(), PORT), acceptor(service, endpoint), db(db) { accept(); }
 
 void babel::Server::accept()
 {

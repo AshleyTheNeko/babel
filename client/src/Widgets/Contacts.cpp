@@ -1,4 +1,5 @@
 #include "Widgets/Contacts.hpp"
+#include <iostream>
 
 babel::ContactsPage::ContactsPage()
     : central_widget(new QWidget()), main_layout(new QHBoxLayout(central_widget)), contact_scroll_area(new QScrollArea(central_widget)),
@@ -28,15 +29,15 @@ void babel::ContactsPage::setup_ui()
 
 QWidget &babel::ContactsPage::get_central_widget() { return (*central_widget); }
 
-QPushButton &babel::ContactsPage::add_contact(std::string const &name, int id)
+QPushButton &babel::ContactsPage::add_contact(std::string const &name)
 {
-    contacts.push_back(std::make_unique<babel::ContactButton>(id, name, contacts_holder, contacts_layout));
+    contacts.push_back(std::make_unique<babel::ContactButton>(name, contacts_holder, contacts_layout));
     return (contacts.back()->get_button());
 }
 void babel::ContactsPage::clear_contacts() { contacts.clear(); }
 
-babel::ContactButton::ContactButton(int id, std::string const &name, QWidget *parent, QVBoxLayout *main_layout)
-    : name(name), id(id), frame(new QFrame(parent)), layout(new QHBoxLayout(frame)), label(new QLabel(frame)),
+babel::ContactButton::ContactButton(std::string const &name, QWidget *parent, QVBoxLayout *main_layout)
+    : name(name), frame(new QFrame(parent)), layout(new QHBoxLayout(frame)), label(new QLabel(frame)),
       button(new QPushButton(frame))
 {
     frame->setObjectName(QString::fromUtf8("frame"));
@@ -59,8 +60,11 @@ babel::ContactButton::ContactButton(int id, std::string const &name, QWidget *pa
     main_layout->addWidget(frame);
 }
 
-std::string &babel::ContactButton::get_name() { return (name); }
+babel::ContactButton::~ContactButton()
+{
+    delete frame;
+}
 
-int &babel::ContactButton::get_id() { return (id); }
+std::string &babel::ContactButton::get_name() { return (name); }
 
 QPushButton &babel::ContactButton::get_button() { return (*button); }

@@ -6,7 +6,6 @@ set(SOURCES
     src/Widgets/Call.cpp
     src/Opus/Decoder.cpp
     src/Widgets/Login.cpp
-    src/Network/Thread.cpp
     src/Widgets/Contacts.cpp
     src/Audio/AudioBuffer.cpp
     src/Widgets/MainWindow.cpp

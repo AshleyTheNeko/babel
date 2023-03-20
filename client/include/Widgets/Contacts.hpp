@@ -11,29 +11,28 @@
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include <iostream>
 
 namespace babel
 {
     class ContactButton {
         public:
-            ContactButton(int id, std::string const &name, QWidget *parent, QVBoxLayout *main_layout);
+            ContactButton(std::string const &name, QWidget *parent, QVBoxLayout *main_layout);
             ContactButton(ContactButton &&) = delete;
             ContactButton(const ContactButton &) = delete;
             ContactButton &operator=(ContactButton &&) = delete;
             ContactButton &operator=(const ContactButton &) = delete;
-            ~ContactButton() = default;
+            ~ContactButton();
 
             std::string &get_name(void);
-            int &get_id(void);
             QPushButton &get_button(void);
 
         private:
             std::string name;
-            int id;
-            QFrame *frame;
-            QHBoxLayout *layout;
-            QLabel *label;
-            QPushButton *button;
+            QPointer<QFrame> frame;
+            QPointer<QHBoxLayout> layout;
+            QPointer<QLabel> label;
+            QPointer<QPushButton> button;
     };
 
     class ContactsPage {
@@ -46,7 +45,7 @@ namespace babel
             ~ContactsPage() = default;
 
             QWidget &get_central_widget();
-            QPushButton &add_contact(std::string const &name, int id);
+            QPushButton &add_contact(std::string const &name);
             void clear_contacts(void);
 
         private:

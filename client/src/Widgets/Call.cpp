@@ -73,22 +73,24 @@ void babel::CallPage::change_text()
 {
     std::stringstream str_time;
 
+    call_name->setText(QString(("Call with " + caller + static_cast<char const *>(awaiting ? " (Awaiting)" : "")).c_str()));
     str_time << "Call time: " << std::setfill('0') << std::setw(2) << timer.elapsed() / MINUTE << ":" << std::setfill('0') << std::setw(2)
              << (timer.elapsed() % MINUTE) / SECOND;
     call_time->setText(QString(str_time.str().c_str()));
 }
 
-void babel::CallPage::setup_informations(std::string const &name, __attribute_maybe_unused__ int start_time)
+void babel::CallPage::setup_informations(std::string const &name, bool await)
 {
-    std::stringstream str_name;
-    std::stringstream str_time;
-
+    awaiting = await;
     timer.restart();
-    str_name << "Call with " << name;
-    call_name->setText(QString(str_name.str().c_str()));
-    str_time << "Call time: 00:00";
-    call_time->setText(QString(str_time.str().c_str()));
+    caller = name;
+    call_name->setText(QString(("Call with " + caller + static_cast<char const *>(awaiting ? " (Awaiting)" : "")).c_str()));
+    call_time->setText(QString("Call time: 00:00"));
 }
+
+void babel::CallPage::set_await(bool await) { awaiting = await; }
+
+bool babel::CallPage::get_await() const { return (awaiting); }
 
 QWidget &babel::CallPage::get_central_widget() { return (*central_widget); }
 

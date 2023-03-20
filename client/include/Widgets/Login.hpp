@@ -27,9 +27,12 @@ namespace babel
             QWidget &get_central_widget();
             std::string get_username();
             std::string get_password();
+            void set_error(std::string &&err);
+
         private:
             QPointer<QWidget> central_widget;
             QPointer<QVBoxLayout> login_box;
+            QPointer<QLabel> error_label;
             QPointer<QLabel> username_label;
             QPointer<QLineEdit> username_field;
             QPointer<QLabel> password_label;

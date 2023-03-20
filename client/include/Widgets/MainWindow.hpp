@@ -3,8 +3,8 @@
 #include "Widgets/Call.hpp"
 #include "Widgets/Contacts.hpp"
 #include "Widgets/Login.hpp"
-#include "Network/Thread.hpp"
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QStackedWidget>
 #include <QTcpSocket>
 #include <QTimer>
@@ -22,26 +22,22 @@ namespace babel
 
         public slots:
             void login_click();
-            void login_done();
             void register_click();
-            void register_done();
             void fetch_contacts();
-            void contacts_fetched();
             void check_calls();
-            void calls_checked();
-            void call_click(const std::string &caller, int id);
+            void in_call();
+            void call_click(const std::string &caller);
             void hangup_click();
+            void net_response();
 
         private:
             static constexpr std::tuple<int, int> WIN_SIZE = {640, 564};
 
             void init_callbacks();
 
-            QPointer<babel::NetThread> network_thread = nullptr;
+            bool call = false;
+            QPointer<QMessageBox> msgbox = nullptr;
             QPointer<QTcpSocket> sock;
-            QByteArray reg_log_bytes;
-            QByteArray contacts_bytes;
-            QByteArray calls_bytes;
             QTimer time;
             QTimer contact_fetch_timer;
             QTimer call_fetch_timer;

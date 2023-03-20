@@ -8,11 +8,14 @@ namespace babel
     enum RequestType {
         MIN_REQUEST,
         LOGIN,
-        LOGOUT,
-        CALL,
-        ACCEPT_CALL,
-        GET_USERS,
         REGISTER,
+        GET_USERS,
+        CALL_PACKET,
+        CALL,
+        GET_CALLS,
+        IN_CALL,
+        ACCEPT_CALL,
+        HANGUP,
         MAX_REQUEST,
     };
 

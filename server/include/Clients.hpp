@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Packet.hpp"
 #include "Database.hpp"
+#include "Packet.hpp"
 #include <asio.hpp>
 
 namespace babel
@@ -14,27 +14,35 @@ namespace babel
             Client(const Client &) = delete;
             Client &operator=(Client &&) = delete;
             Client &operator=(const Client &) = delete;
-            ~Client() = default;
+            ~Client();
 
             void start();
+            bool is_delete() const;
             socket &get_socket();
             void recieve_header();
             void recieve_body(const asio::error_code &error, std::size_t bytes_transferred);
             void parse_body(const asio::error_code &error, std::size_t bytes_transferred);
 
-            void login(std::tuple<std::string, std::string> props);
-            void register_user(std::tuple<std::string, std::string> props);
-            void get_users();
-            void logout();
-            void call_user();
-            void accept_call();
-            
+            std::string login(std::tuple<std::string, std::string> &&props);
+            std::string register_user(std::tuple<std::string, std::string> &&props);
+            std::string get_users();
+            std::string get_calls();
+            std::string in_call();
+            std::string transfer_packet();
+            std::string call_user(std::string &&username);
+            std::string accept_call();
+            std::string hangup();
+            std::string &get_name();
 
         private:
+            bool to_delete = false;
+            bool awaiting_pickup = false;
             Database &db;
             Packet last_packet;
             std::vector<std::shared_ptr<Client>> &clients;
             std::string username;
+            std::string call_request;
+            std::shared_ptr<Client> call;
             int user_id;
             socket sock;
     };

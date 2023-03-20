@@ -7,6 +7,7 @@
 
 namespace babel
 {
+    constexpr int PORT = 2000;
     class Server {
         public:
             Server(Database &db);
