@@ -28,7 +28,7 @@ namespace babel
             std::string get_users();
             std::string get_calls();
             std::string in_call();
-            std::string transfer_packet();
+            void transfer_packet();
             std::string call_user(std::string &&username);
             std::string accept_call();
             std::string hangup();

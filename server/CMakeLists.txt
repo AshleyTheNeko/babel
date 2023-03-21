@@ -5,6 +5,7 @@ set(SOURCES
     src/Server.cpp
     src/Clients.cpp
     src/Database.cpp
+    src/ClientsResponses.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${COMMON_SOURCES})

@@ -2,16 +2,17 @@ project(babel_client)
 
 set(SOURCES
     src/main.cpp
-    src/Opus/Encoder.cpp
+    src/Audio/Opus.cpp
     src/Widgets/Call.cpp
-    src/Opus/Decoder.cpp
     src/Widgets/Login.cpp
     src/Widgets/Contacts.cpp
     src/Audio/AudioBuffer.cpp
     src/Widgets/MainWindow.cpp
+    src/Widgets/WindowSlots.cpp
+    src/Widgets/NetFunctions.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${COMMON_SOURCES})
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}/include
