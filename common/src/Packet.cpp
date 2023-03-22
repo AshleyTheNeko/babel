@@ -1,7 +1,7 @@
 #include "Packet.hpp"
 #include <string>
 
-char *babel::Packet::get_body() noexcept { return (*body); };
+char *babel::Packet::get_body() noexcept { return (body.get()); };
 
 char *babel::Packet::get_header() noexcept { return (static_cast<char *>(header)); }
 
@@ -16,12 +16,12 @@ void babel::Packet::set_body_size_from_header()
         throw Error("Invalid type");
     }
     try {
-        body = std::make_shared<char *>(new char[body_size + 1]);
+        body = std::make_unique<char[]>(body_size + 1);
     } catch (const std::exception &e) {
         body = nullptr;
         throw ErrorAllocFail();
     }
-    std::fill_n(*body, body_size + 1, 0);
+    std::fill_n(body.get(), body_size + 1, 0);
 }
 
 int babel::Packet::get_size() noexcept { return (body_size); }

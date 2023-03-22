@@ -5,14 +5,15 @@ babel::Server::Server(Database &db) : endpoint(asio::ip::tcp::v4(), PORT), accep
 
 void babel::Server::accept()
 {
-    std::shared_ptr<Client> cli = std::make_shared<Client>(service, clients, db);
+    temporary_client = std::make_unique<Client>(service, clients, db);
 
-    acceptor.async_accept(cli->get_socket(), std::bind(&babel::Server::handle_accept, this, cli));
+    acceptor.async_accept(temporary_client->get_socket(), std::bind(&babel::Server::handle_accept, this));
 }
 
-void babel::Server::handle_accept(const std::shared_ptr<Client> &client)
+void babel::Server::handle_accept()
 {
-    client->start();
+    temporary_client->start();
+    clients.emplace_back(std::move(temporary_client));
     accept();
 }
 

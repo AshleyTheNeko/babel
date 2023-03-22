@@ -11,7 +11,7 @@ std::string babel::Client::login(std::tuple<std::string, std::string> &&props)
         username = std::get<0>(props);
     }
 
-    return (std::to_string(RequestType::LOGIN) + "/" + std::string(static_cast<char const *>(db_ret.empty() ? "KO" : "OK")));
+    return {static_cast<char const *>(db_ret.empty() ? "KO" : "OK")};
 }
 
 std::string babel::Client::register_user(std::tuple<std::string, std::string> &&props)
@@ -21,7 +21,7 @@ std::string babel::Client::register_user(std::tuple<std::string, std::string> &&
     request += (std::get<0>(props) + "\", \"" + std::get<1>(props) + "\")");
     auto db_ret = db.run_query(std::move(request));
 
-    return (std::to_string(RequestType::LOGIN) + "/" + std::string(static_cast<char const *>(db_ret.empty() ? "KO" : "OK")));
+    return {static_cast<char const *>(db_ret.empty() ? "KO" : "OK")};
 }
 
 void babel::Client::transfer_packet()
@@ -29,7 +29,7 @@ void babel::Client::transfer_packet()
     if (call == nullptr) {
         throw Error("Not in a call");
     }
-    std::string packet = std::to_string(RequestType::CALL_PACKET) + "/" +
+    std::string packet = std::string(last_packet.get_header(), last_packet.get_header() + HEADER_MAX_SIZE) +
         std::string(last_packet.get_body(), last_packet.get_body() + last_packet.get_size());
 
     async_write(call->get_socket(), asio::buffer(packet.c_str(), packet.size()),
@@ -40,19 +40,19 @@ void babel::Client::transfer_packet()
 std::string babel::Client::in_call()
 {
     if (awaiting_pickup) {
-        return (std::to_string(RequestType::IN_CALL) + "/1");
+        return ("1");
     }
     if (call != nullptr) {
-        return (std::to_string(RequestType::IN_CALL) + "/2");
+        return ("2");
     }
-    return (std::to_string(RequestType::IN_CALL) + "/0");
+    return ("0");
 }
 
 std::string babel::Client::get_calls()
 {
     std::string resp = (static_cast<char const *>(call_request.empty() ? "0" : "1")) + call_request;
 
-    return (std::to_string(RequestType::GET_CALLS) + "/" + resp);
+    return (resp);
 }
 
 std::string babel::Client::get_users()
@@ -66,7 +66,7 @@ std::string babel::Client::get_users()
         ret_str += client->get_name() + ";";
     }
 
-    return (std::to_string(RequestType::GET_USERS) + "/" + ret_str);
+    return (ret_str);
 }
 
 std::string babel::Client::call_user(std::string &&name)
@@ -86,7 +86,7 @@ std::string babel::Client::call_user(std::string &&name)
             }
             client->call_request = this->username;
             awaiting_pickup = true;
-            return (std::to_string(RequestType::CALL) + "/0" + name);
+            return ("0" + name);
         }
     }
 
@@ -102,10 +102,10 @@ std::string babel::Client::accept_call()
     for (auto const &client : clients) {
         if (client->get_name() == call_request) {
             call_request.clear();
-            call = client;
-            client->call = shared_from_this();
+            call = client.get();
+            client->call = this;
             call->awaiting_pickup = false;
-            return (std::to_string(RequestType::ACCEPT_CALL) + "/0" + call->get_name());
+            return ("0" + call->get_name());
         }
     }
 
@@ -127,9 +127,9 @@ std::string babel::Client::hangup()
         call_request.clear();
     }
     if (call != nullptr) {
-        call->call.reset();
-        call.reset();
+        call->call = nullptr;
+        call = nullptr;
     }
 
-    return (std::to_string(RequestType::HANGUP) + "/" + "OK");
+    return ("OK");
 }

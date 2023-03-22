@@ -7,9 +7,9 @@
 namespace babel
 {
     using socket = asio::ip::tcp::socket;
-    class Client : public std::enable_shared_from_this<Client> {
+    class Client {
         public:
-            Client(asio::io_service &service, std::vector<std::shared_ptr<Client>> &clients, Database &db);
+            Client(asio::io_service &service, std::vector<std::unique_ptr<Client>> &clients, Database &db);
             Client(Client &&) = delete;
             Client(const Client &) = delete;
             Client &operator=(Client &&) = delete;
@@ -39,10 +39,10 @@ namespace babel
             bool awaiting_pickup = false;
             Database &db;
             Packet last_packet;
-            std::vector<std::shared_ptr<Client>> &clients;
+            std::vector<std::unique_ptr<Client>> &clients;
             std::string username;
             std::string call_request;
-            std::shared_ptr<Client> call;
+            Client *call = nullptr;
             int user_id;
             socket sock;
     };

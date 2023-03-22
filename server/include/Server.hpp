@@ -18,11 +18,12 @@ namespace babel
             ~Server() = default;
 
             void run();
-            void handle_accept(const std::shared_ptr<Client> &client);
+            void handle_accept();
             void accept();
         private:
             Database &db;
-            std::vector<std::shared_ptr<Client>> clients;
+            std::unique_ptr<Client> temporary_client;
+            std::vector<std::unique_ptr<Client>> clients;
             asio::io_service service;
             asio::ip::tcp::endpoint endpoint;
             asio::ip::tcp::acceptor acceptor;

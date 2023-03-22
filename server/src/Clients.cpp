@@ -1,25 +1,23 @@
 #include "Clients.hpp"
 #include <iostream>
 
-babel::Client::Client(asio::io_service &service, std::vector<std::shared_ptr<Client>> &clients, Database &db)
+babel::Client::Client(asio::io_service &service, std::vector<std::unique_ptr<Client>> &clients, Database &db)
     : clients(clients), sock(service), db(db), user_id(0)
 {
-}
-
-babel::Client::~Client()
-{
-    if (call != nullptr) {
-        call.reset();
-    }
 }
 
 babel::socket &babel::Client::get_socket() { return (sock); }
 
 void babel::Client::start()
 {
-    clients.push_back(shared_from_this());
-
     recieve_header();
+}
+
+babel::Client::~Client()
+{
+    if (call != nullptr) {
+        call->call = nullptr;
+    }
 }
 
 bool babel::Client::is_delete() const { return to_delete; }
@@ -37,7 +35,7 @@ void babel::Client::recieve_body(const asio::error_code &error, __attribute_mayb
     if (error == asio::error::eof) {
         to_delete = true;
         clients.erase(
-            std::remove_if(clients.begin(), clients.end(), [this](const std::shared_ptr<Client> &obj) { return obj->is_delete(); }),
+            std::remove_if(clients.begin(), clients.end(), [this](std::unique_ptr<Client> const &obj) { return obj->is_delete(); }),
             clients.end());
         return;
     }
@@ -78,7 +76,7 @@ void babel::Client::parse_body(
     if (error == asio::error::eof) {
         to_delete = true;
         clients.erase(
-            std::remove_if(clients.begin(), clients.end(), [this](const std::shared_ptr<Client> &obj) { return obj->is_delete(); }),
+            std::remove_if(clients.begin(), clients.end(), [this](std::unique_ptr<Client> const &obj) { return obj->is_delete(); }),
             clients.end());
         return;
     }
@@ -128,13 +126,18 @@ void babel::Client::parse_body(
         }
     } catch (const babel::Error &e) {
         std::cerr << e.what() << '\n';
-        std::string err = std::to_string(last_packet.get_type()) + "/1" + e.what();
+        std::string err = std::string("1") + e.what();
+        std::string header = std::to_string(err.size());
+        std::string request;
+        request.append(std::string(4 - std::min(static_cast<size_t>(4), header.size()), '0') + header + "/" +
+            std::to_string(last_packet.get_type()));
+        request.append(err);
         async_write(sock, asio::buffer(err.c_str(), err.size()),
             [this](const asio::error_code &error, __attribute_maybe_unused__ std::size_t bytes_transferred) {
                 if (error == asio::error::eof) {
                     to_delete = true;
                     clients.erase(std::remove_if(clients.begin(), clients.end(),
-                                      [this](const std::shared_ptr<Client> &obj) { return obj->is_delete(); }),
+                                      [this](std::unique_ptr<Client> const &obj) { return obj->is_delete(); }),
                         clients.end());
                     return;
                 }
@@ -144,12 +147,17 @@ void babel::Client::parse_body(
     }
 
     if (!response.empty()) {
-        async_write(sock, asio::buffer(response.c_str(), response.size()),
+        std::string header = std::to_string(response.size());
+        std::string request;
+        request.append(std::string(4 - std::min(static_cast<size_t>(4), header.size()), '0') + header + "/" +
+            std::to_string(last_packet.get_type()));
+        request.append(response);
+        async_write(sock, asio::buffer(request.c_str(), request.size()),
             [this](const asio::error_code &error, __attribute_maybe_unused__ std::size_t bytes_transferred) {
                 if (error == asio::error::eof) {
                     to_delete = true;
                     clients.erase(std::remove_if(clients.begin(), clients.end(),
-                                      [this](const std::shared_ptr<Client> &obj) { return obj->is_delete(); }),
+                                      [this](std::unique_ptr<Client> const &obj) { return obj->is_delete(); }),
                         clients.end());
                     return;
                 }

@@ -36,7 +36,7 @@ namespace babel
             RequestType get_type() noexcept;
 
         private:
-            std::shared_ptr<char *> body = nullptr;
+            std::unique_ptr<char[]> body = nullptr;
             char header[HEADER_MAX_SIZE] = {0};
             RequestType req_type;
             int body_size = 0;

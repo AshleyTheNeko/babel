@@ -43,7 +43,9 @@ static int speaker_callback(__attribute_maybe_unused__ const void *input, void *
 {
     auto *buffer = static_cast<babel::AudioBuffer *>(data);
     auto *speaker = static_cast<float *>(output);
+    buffer->set_lock_state(true, babel::source_type::SPEAKER);
     std::vector<std::vector<float>> &bytes = buffer->get_frames(babel::source_type::SPEAKER);
+    buffer->set_lock_state(false, babel::source_type::SPEAKER);
 
     if (buffer == nullptr) {
         return (paComplete);
@@ -66,11 +68,13 @@ static int speaker_callback(__attribute_maybe_unused__ const void *input, void *
 
 babel::AudioBuffer::~AudioBuffer()
 {
-    stream = false;
-    mic_thread->join();
-    speaker_thread->join();
-    Pa_AbortStream(microphone);
-    Pa_AbortStream(speakers);
+    if (stream) {
+        stream = false;
+        mic_thread->join();
+        speaker_thread->join();
+        Pa_AbortStream(microphone);
+        Pa_AbortStream(speakers);
+    }
 }
 
 babel::AudioBuffer::AudioBuffer()
@@ -180,12 +184,14 @@ void babel::AudioBuffer::init_mic_thread(MainWindow &win)
                         if (mic_frames.empty() || mic_frames.front().empty()) {
                             break;
                         }
+                        mic_lock.lock();
                         frame_temp = mic_frames.front();
                         bin_temp = get_codec().encode(frame_temp);
                         mic_frames.erase(mic_frames.begin());
                         mic_bins.push_back(bin_temp);
-                        QMetaObject::invokeMethod(win, &MainWindow::send_audio, Qt::QueuedConnection);
+                        mic_lock.unlock();
                         bin_temp.clear();
+                        QMetaObject::invokeMethod(win, &MainWindow::send_audio, Qt::QueuedConnection);
                         frame_temp.clear();
                     } while (!frame_temp.empty());
                     Pa_Sleep(10);
@@ -214,8 +220,8 @@ bool babel::AudioBuffer::streaming() const { return stream; }
 void babel::AudioBuffer::stop_streaming()
 {
     stream = false;
-    Pa_StopStream(microphone);
-    Pa_StopStream(speakers);
+    Pa_AbortStream(microphone);
+    Pa_AbortStream(speakers);
 }
 
 std::vector<std::vector<float>> &babel::AudioBuffer::get_frames(source_type type)

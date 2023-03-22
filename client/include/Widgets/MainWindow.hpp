@@ -13,7 +13,7 @@ namespace babel
 {
     class MainWindow : public QMainWindow {
         public:
-            MainWindow(QWidget *parent = nullptr);
+            MainWindow(QString &host, int port);
             MainWindow(MainWindow &&) = delete;
             MainWindow(const MainWindow &) = delete;
             MainWindow &operator=(MainWindow &&) = delete;
@@ -35,17 +35,17 @@ namespace babel
             static constexpr std::tuple<int, int> WIN_SIZE = {640, 564};
 
             void init_callbacks();
-            void login_res(std::string &body);
-            void register_res(std::string &body);
-            void in_call_res(std::string &body);
-            void call_res(std::string &body, bool type);
-            void get_call_res(std::string &body);
-            void hangup_res(std::string &body);
-            void contacts_res(std::string &body);
-            void call_packet_res(std::string &body);
+            void login_res(std::string &&body);
+            void register_res(std::string &&body);
+            void in_call_res(std::string &&body);
+            void call_res(std::string &&body, bool type);
+            void get_call_res(std::string &&body);
+            void hangup_res(std::string &&body);
+            void contacts_res(std::string &&body);
+            void call_packet_res(std::string &&body);
 
             bool call = false;
-            std::shared_ptr<AudioBuffer> audio_manager = nullptr;
+            std::unique_ptr<AudioBuffer> audio_manager = nullptr;
             QPointer<QMessageBox> msgbox = nullptr;
             QPointer<QTcpSocket> sock;
             QTimer time;

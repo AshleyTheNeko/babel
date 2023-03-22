@@ -1,12 +1,13 @@
 #include "Widgets/MainWindow.hpp"
 #include "Packet.hpp"
 #include "const_expressions.h"
+#include <QAbstractSocket>
 #include <QMessageBox>
 #include <QThread>
 #include <array>
 #include <iostream>
 
-babel::MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+babel::MainWindow::MainWindow(QString &host, int port) : QMainWindow(nullptr)
 {
     if (objectName().isEmpty()) {
         setObjectName(QString::fromUtf8("MainWindow"));
@@ -32,11 +33,14 @@ babel::MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     call_fetch_timer.start();
 
     sock = new QTcpSocket(this);
-    sock->connectToHost("localhost", 2000);
+    sock->connectToHost(host, port);
     sock->waitForConnected(3000);
+    if (sock->state() != QAbstractSocket::ConnectedState) {
+        throw Error("Unable to connect to server.");
+    }
     connect(sock, &QTcpSocket::readyRead, this, &babel::MainWindow::net_response);
 
-    audio_manager = std::make_shared<AudioBuffer>();
+    audio_manager = std::make_unique<AudioBuffer>();
 
     init_callbacks();
 }
