@@ -1,0 +1,69 @@
+ASHLEY'S BABEL PROTOCOL
+
+A typical babel datagram is composed of a header and a body.
+
+The header must be exactly 6 bytes long and contain:
+4 bytes reserved for body size
+1 separator byte
+1 byte for request type
+
+The body must be exactly the same size as specified in the
+header, otherwise, undefined behabiour may occur.
+
+The request types are defined in Packet.hpp as an enum.
+Their content must be as explained here
+    (1)LOGIN
+        username;password
+        where username and password are strings
+
+        server will respond with either "OK" or "KO"
+
+    (2)REGISTER
+        username;password
+        where username and password are strings
+
+        server will respond with either "OK" or "KO"
+
+    (3)GET_USERS
+        No body
+
+        server will repond with a list of users in the
+        following format:
+        ;username;username;...
+        username may be empty, list may be empty
+
+    (4)CALL_PACKET
+        data
+        where data is the raw encoded data
+
+        server will not reply
+
+    (5)CALL
+        username
+        where username is a string containing the name to call
+
+        server will respond with either "OK" or "KO"
+
+    (6)GET_CALLS
+        No body
+
+        server will either respond 0 for no call or 1username
+        where username is the name of user calling the client
+
+    (7)IN_CALL
+        No body
+
+        server will respond with either:
+            0 for no call
+            1 for awaiting pickup
+            2 for in active call
+
+    (8)ACCEPT_CALL
+        No body
+
+        server will respond with either "OK" or "KO"
+
+    (9)HANGUP
+        No body
+
+        server will respond with either "OK" or "KO"
