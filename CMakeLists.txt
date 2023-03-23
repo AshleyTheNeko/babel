@@ -32,7 +32,6 @@ find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(EXISTS ${CLANG_TIDY_EXE})
 	set(CLANG_TIDY
 		"${CLANG_TIDY_EXE}"
-		"-line-filter=[{\"name\":\"moc_MicThread.cpp\",\"lines\":[[9999999,9999999]]},{\"name\":\".h\"},{\"name\":\".hpp\"},{\"name\":\".cpp\"}]"
 		"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy"
 		"-header-filter=^.*(?:third-party).*gm")
 	set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY}")
