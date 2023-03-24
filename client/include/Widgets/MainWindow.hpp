@@ -45,7 +45,8 @@ namespace babel
             void call_packet_res(std::string &&body);
 
             bool call = false;
-            std::unique_ptr<AudioBuffer> audio_manager = nullptr;
+            std::unique_ptr<IAudioDevice> audio_manager = nullptr;
+            std::unique_ptr<ICodec> codec = nullptr;
             QPointer<QMessageBox> msgbox = nullptr;
             QPointer<QTcpSocket> sock;
             QTimer time;

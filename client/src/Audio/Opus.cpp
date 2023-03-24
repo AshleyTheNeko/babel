@@ -1,5 +1,6 @@
 #include "Audio/Opus.hpp"
 #include "Error.hpp"
+#include "const_expressions.h"
 
 babel::Codec::Codec()
 {

@@ -1,7 +1,7 @@
 #include "Audio/AudioBuffer.hpp"
-#include "Audio/Opus.hpp"
 #include "Error.hpp"
 #include "Widgets/MainWindow.hpp"
+#include "const_expressions.h"
 #include <iostream>
 
 static int mic_callback(const void *input, __attribute_maybe_unused__ void *output, size_t frames,
@@ -18,7 +18,7 @@ static int mic_callback(const void *input, __attribute_maybe_unused__ void *outp
     if (!buffer->streaming()) {
         return (paContinue);
     }
-    buffer->set_lock_state(true, babel::source_type::MIC);
+    buffer->set_lock_state(true, source_type::MIC);
     if (input == nullptr) {
         for (size_t i = 0; i < frames; i++) {
             result.push_back(.0F);
@@ -32,8 +32,8 @@ static int mic_callback(const void *input, __attribute_maybe_unused__ void *outp
             mic++;
         }
     }
-    buffer->get_frames(babel::source_type::MIC).push_back(result);
-    buffer->set_lock_state(false, babel::source_type::MIC);
+    buffer->get_frames(source_type::MIC).push_back(result);
+    buffer->set_lock_state(false, source_type::MIC);
     return (paContinue);
 }
 
@@ -43,9 +43,9 @@ static int speaker_callback(__attribute_maybe_unused__ const void *input, void *
 {
     auto *buffer = static_cast<babel::AudioBuffer *>(data);
     auto *speaker = static_cast<float *>(output);
-    buffer->set_lock_state(true, babel::source_type::SPEAKER);
-    std::vector<std::vector<float>> &bytes = buffer->get_frames(babel::source_type::SPEAKER);
-    buffer->set_lock_state(false, babel::source_type::SPEAKER);
+    buffer->set_lock_state(true, source_type::SPEAKER);
+    std::vector<std::vector<float>> &bytes = buffer->get_frames(source_type::SPEAKER);
+    buffer->set_lock_state(false, source_type::SPEAKER);
 
     if (buffer == nullptr) {
         return (paComplete);
@@ -60,9 +60,9 @@ static int speaker_callback(__attribute_maybe_unused__ const void *input, void *
         *speaker = value;
         speaker++;
     }
-    buffer->set_lock_state(true, babel::source_type::SPEAKER);
+    buffer->set_lock_state(true, source_type::SPEAKER);
     bytes.erase(bytes.begin());
-    buffer->set_lock_state(false, babel::source_type::SPEAKER);
+    buffer->set_lock_state(false, source_type::SPEAKER);
     return (paContinue);
 }
 
@@ -132,7 +132,7 @@ void babel::AudioBuffer::set_lock_state(bool state, source_type type)
     }
 }
 
-void babel::AudioBuffer::init_speaker_thread()
+void babel::AudioBuffer::init_speaker_thread(ICodec &codec)
 {
     PaError err = paNoError;
 
@@ -141,30 +141,33 @@ void babel::AudioBuffer::init_speaker_thread()
         throw Error("Speakers stream start failure");
     }
 
-    speaker_thread = std::make_unique<std::thread>([this]() {
-        std::vector<float> frame_temp;
+    speaker_thread = std::make_unique<std::thread>(
+        [this](ICodec *codec) {
+            std::vector<float> frame_temp;
 
-        try {
-            while (stream) {
-                while (!speaker_bins.empty()) {
-                    speaker_lock.lock();
-                    frame_temp = codec.decode(speaker_bins.front());
-                    speaker_bins.erase(speaker_bins.begin());
-                    if (frame_temp.empty()) {
-                        continue;
+            try {
+                while (stream) {
+                    while (!speaker_bins.empty()) {
+                        speaker_lock.lock();
+                        frame_temp = codec->decode(speaker_bins.front());
+                        speaker_bins.erase(speaker_bins.begin());
+                        if (frame_temp.empty()) {
+                            continue;
+                        }
+                        speaker_frames.push_back(frame_temp);
+                        frame_temp.clear();
+                        speaker_lock.unlock();
                     }
-                    speaker_frames.push_back(frame_temp);
-                    frame_temp.clear();
-                    speaker_lock.unlock();
+                    Pa_Sleep(10);
                 }
-                Pa_Sleep(10);
+            } catch (const std::exception &error) {
+                std::cerr << error.what() << std::endl;
             }
-        } catch (const std::exception &error) {
-            std::cerr << error.what() << std::endl;
-        }
-    });
+        },
+        &codec);
 }
-void babel::AudioBuffer::init_mic_thread(MainWindow &win)
+
+void babel::AudioBuffer::init_mic_thread(MainWindow &win, ICodec &codec)
 {
     PaError err = paNoError;
 
@@ -174,7 +177,7 @@ void babel::AudioBuffer::init_mic_thread(MainWindow &win)
     }
 
     mic_thread = std::make_unique<std::thread>(
-        [this](babel::MainWindow *win) {
+        [this](babel::MainWindow *win, ICodec *codec) {
             std::vector<unsigned char> bin_temp;
             std::vector<float> frame_temp;
 
@@ -186,7 +189,7 @@ void babel::AudioBuffer::init_mic_thread(MainWindow &win)
                         }
                         mic_lock.lock();
                         frame_temp = mic_frames.front();
-                        bin_temp = get_codec().encode(frame_temp);
+                        bin_temp = codec->encode(frame_temp);
                         mic_frames.erase(mic_frames.begin());
                         mic_bins.push_back(bin_temp);
                         mic_lock.unlock();
@@ -200,20 +203,18 @@ void babel::AudioBuffer::init_mic_thread(MainWindow &win)
                 std::cerr << e.what() << std::endl;
             }
         },
-        &win);
+        &win, &codec);
 }
 
-void babel::AudioBuffer::start_call_threads(MainWindow &win)
+void babel::AudioBuffer::start_call_threads(babel::MainWindow &win, ICodec &codec)
 {
     if (microphone == nullptr || speakers == nullptr || stream) {
         return;
     }
     stream = true;
-    init_speaker_thread();
-    init_mic_thread(win);
+    init_speaker_thread(codec);
+    init_mic_thread(win, codec);
 }
-
-babel::Codec &babel::AudioBuffer::get_codec() { return codec; }
 
 bool babel::AudioBuffer::streaming() const { return stream; }
 

@@ -6,23 +6,24 @@ The header must be exactly 6 bytes long and contain:
 4 bytes reserved for body size
 1 separator byte
 1 byte for request type
+The data is in binary format.
+The separator byte is a full binary zero.
 
 The body must be exactly the same size as specified in the
 header, otherwise, undefined behabiour may occur.
 
-The request types are defined in Packet.hpp as an enum.
-Their content must be as explained here
+The request types are expected to be as described here:
     (1)LOGIN
         username;password
         where username and password are strings
 
-        server will respond with either "OK" or "KO"
+        server will respond with either "OK" or "KO" as ascii
 
     (2)REGISTER
         username;password
         where username and password are strings
 
-        server will respond with either "OK" or "KO"
+        server will respond with either "OK" or "KO" as ascii
 
     (3)GET_USERS
         No body
@@ -42,28 +43,29 @@ Their content must be as explained here
         username
         where username is a string containing the name to call
 
-        server will respond with either "OK" or "KO"
+        server will respond with either "OK" or "KO" as ascii
 
     (6)GET_CALLS
         No body
 
-        server will either respond 0 for no call or 1username
+        server will either respond ascii 0 for no call or 1username
         where username is the name of user calling the client
 
     (7)IN_CALL
         No body
 
         server will respond with either:
-            0 for no call
-            1 for awaiting pickup
-            2 for in active call
+            "0" for no call
+            "1" for awaiting pickup
+            "2" for in active call
+            as ascii format
 
     (8)ACCEPT_CALL
         No body
 
-        server will respond with either "OK" or "KO"
+        server will respond with either "OK" or "KO" as ascii
 
     (9)HANGUP
         No body
 
-        server will respond with either "OK" or "KO"
+        server will respond with either "OK" or "KO" as ascii

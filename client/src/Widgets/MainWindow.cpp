@@ -1,4 +1,5 @@
 #include "Widgets/MainWindow.hpp"
+#include "Audio/Opus.hpp"
 #include "Packet.hpp"
 #include "const_expressions.h"
 #include <QAbstractSocket>
@@ -41,6 +42,7 @@ babel::MainWindow::MainWindow(QString &host, int port) : QMainWindow(nullptr)
     connect(sock, &QTcpSocket::readyRead, this, &babel::MainWindow::net_response);
 
     audio_manager = std::make_unique<AudioBuffer>();
+    codec = std::make_unique<Codec>();
 
     init_callbacks();
 }

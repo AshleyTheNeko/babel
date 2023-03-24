@@ -2,14 +2,11 @@
 
 #include <opus.h>
 #include <vector>
+#include "ICodec.hpp"
 
 namespace babel
 {
-    constexpr std::size_t RATE = 48000;
-    constexpr std::size_t SIZE = 960;
-    constexpr std::size_t CHANNELS = 2;
-    constexpr std::size_t MAX_SIZE = 2048;
-    class Codec {
+    class Codec: public ICodec {
         public:
             Codec();
             Codec(Codec &&) = delete;
