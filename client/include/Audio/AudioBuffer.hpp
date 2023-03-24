@@ -10,6 +10,10 @@ namespace babel
 {
     class MainWindow;
 
+    /**
+     * @brief Implementation of IAudioDevice for portaudio
+     * 
+     */
     class AudioBuffer: public IAudioDevice {
         public:
             AudioBuffer();
