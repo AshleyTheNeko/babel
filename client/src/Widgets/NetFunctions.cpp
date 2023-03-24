@@ -83,7 +83,7 @@ void babel::MainWindow::in_call_res(std::string &&body)
             break;
         case '2':
             if (!audio_manager->streaming()) {
-                audio_manager->start_call_threads(*this, *codec);
+                audio_manager->start_streaming(*this, *codec);
             }
             call_page.set_await(false);
             break;

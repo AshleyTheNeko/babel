@@ -206,7 +206,7 @@ void babel::AudioBuffer::init_mic_thread(MainWindow &win, ICodec &codec)
         &win, &codec);
 }
 
-void babel::AudioBuffer::start_call_threads(babel::MainWindow &win, ICodec &codec)
+void babel::AudioBuffer::start_streaming(babel::MainWindow &win, ICodec &codec)
 {
     if (microphone == nullptr || speakers == nullptr || stream) {
         return;

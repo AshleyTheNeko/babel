@@ -20,7 +20,7 @@ class IAudioDevice {
         IAudioDevice &operator=(const IAudioDevice &) = delete;
         virtual ~IAudioDevice() = default;
 
-        virtual void start_call_threads(babel::MainWindow &win, ICodec &codec) = 0;
+        virtual void start_streaming(babel::MainWindow &win, ICodec &codec) = 0;
         virtual void set_lock_state(bool state, source_type type) = 0;
         virtual bool streaming() const = 0;
         virtual void stop_streaming() = 0;

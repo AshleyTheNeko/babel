@@ -19,7 +19,7 @@ namespace babel
             AudioBuffer &operator=(const AudioBuffer &) = delete;
             ~AudioBuffer();
 
-            void start_call_threads(babel::MainWindow &win, ICodec &codec);
+            void start_streaming(babel::MainWindow &win, ICodec &codec);
             void set_lock_state(bool state, source_type type);
             bool streaming() const;
             void stop_streaming();
